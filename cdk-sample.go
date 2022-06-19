@@ -2,6 +2,9 @@ package main
 
 import (
 	"github.com/aws/aws-cdk-go/awscdk/v2"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awss3"
+	"github.com/aws/jsii-runtime-go"
+
 	// "github.com/aws/aws-cdk-go/awscdk/v2/awssqs"
 	"github.com/aws/constructs-go/constructs/v10"
 	// "github.com/aws/jsii-runtime-go"
@@ -17,6 +20,22 @@ func NewCdkSampleStack(scope constructs.Construct, id string, props *CdkSampleSt
 		sprops = props.StackProps
 	}
 	stack := awscdk.NewStack(scope, &id, &sprops)
+
+	awss3.NewBucket(
+		stack,
+		jsii.String("sample-backet-ver2"),
+		&awss3.BucketProps{
+			BucketName:        jsii.String("sample-backet-from-golang"),
+			AccessControl:     awss3.BucketAccessControl_PRIVATE,
+			BlockPublicAccess: awss3.BlockPublicAccess_BLOCK_ALL(),
+			LifecycleRules: &[]*awss3.LifecycleRule{
+				{
+					Enabled:    jsii.Bool(true),
+					Expiration: awscdk.Duration_Days(jsii.Number(1.0)),
+				},
+			},
+		},
+	)
 
 	// The code that defines your stack goes here
 
